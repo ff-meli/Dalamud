@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dalamud.DiscordBot;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.Command;
 using Dalamud.Game.Internal;
@@ -30,6 +31,11 @@ namespace Dalamud.Plugin
         public readonly Framework Framework;
 
         /// <summary>
+        /// The DiscordBotManager object that allows you to send messages to Discord
+        /// </summary>
+        public readonly DiscordBotManager DiscordBotManager;
+
+        /// <summary>
         /// Set up the interface and populate all fields needed.
         /// </summary>
         /// <param name="dalamud"></param>
@@ -37,6 +43,7 @@ namespace Dalamud.Plugin
             this.CommandManager = dalamud.CommandManager;
             this.Framework = dalamud.Framework;
             this.ClientState = dalamud.ClientState;
+            this.DiscordBotManager = dalamud.BotManager;
         }
     }
 }

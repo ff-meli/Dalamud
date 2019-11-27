@@ -88,8 +88,12 @@ namespace Dalamud.Game.Internal.Gui {
                 var senderName = StdString.ReadFromPointer(pSenderName);
                 var message = StdString.ReadFromPointer(pMessage);
 
-                Log.Debug($"HandlePrintMessageDetour {manager} - [{chattype}] [{BitConverter.ToString(message.RawData).Replace("-", " ")}] {message.Value} from {senderName.Value}");
-                // Log.Debug($"Got message bytes {BitConverter.ToString(messageBytes.Bytes).Replace("-", " ")}");
+                Log.Debug($"HandlePrintMessageDetour {manager} - [{chattype}] {message.Value} from {senderName.Value}");
+                Log.Debug($"  message bytes {BitConverter.ToString(message.RawData).Replace("-", " ")}");
+                if (senderName.RawData.Length > 0)
+                {
+                    Log.Debug($"  sender bytes {BitConverter.ToString(senderName.RawData).Replace("-", " ")}");
+                }
 
                 var originalMessageData = (byte[]) message.RawData.Clone();
 

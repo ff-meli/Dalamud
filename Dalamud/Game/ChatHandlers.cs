@@ -152,7 +152,7 @@ namespace Dalamud.Game {
                     //var itemName = SeString.Parse(itemInfo.Value).Output;
                     var (itemId, isHQ) = (ValueTuple<int, bool>)(SeString.Parse(message.RawData).Payloads[0].Param1);
 
-                    Log.Debug($"Probable retainer sale: {message}, decoded item {itemId}, HQ {isHQ}");
+                    Log.Debug($"Probable retainer sale: {message.Value}, decoded item {itemId}, HQ {isHQ}");
 
                     int itemValue = 0;
                     var valueInfo = matchInfo.Groups["value"];

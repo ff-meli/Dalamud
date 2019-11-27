@@ -36,8 +36,13 @@ namespace Dalamud.DiscordBot {
             this.config = config;
             config.OwnerUserId = 123830058426040321;
 
-            this.socketClient = new DiscordSocketClient();
+            this.socketClient = new DiscordSocketClient(new DiscordSocketConfig
+            {
+                LogLevel = LogSeverity.Debug
+            });
+
             this.socketClient.Ready += SocketClientOnReady;
+            this.socketClient.Log += SocketClientOnLog;
         }
 
         private XivChatType GetChatTypeBySlug(string slug) {
@@ -77,6 +82,12 @@ namespace Dalamud.DiscordBot {
 
             this.socketClient.SetGameAsync("FINAL FANTASY XIV").GetAwaiter().GetResult();
 
+            return Task.CompletedTask;
+        }
+
+        private Task SocketClientOnLog(LogMessage message)
+        {
+            Log.Debug($"Discord log: {message.Message}");
             return Task.CompletedTask;
         }
 

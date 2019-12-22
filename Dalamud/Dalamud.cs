@@ -392,7 +392,15 @@ namespace Dalamud {
         private void OnItemLinkCommand(string command, string arguments) {
             Task.Run(async () => {
                 try {
-                    dynamic results = await XivApi.Search(arguments, "Item", 1);
+                    // If we want the localized name for the client's language, we can add Name_en (redundant), Name_fr, Name_de, or Name_ja to columns
+                    // something like this:
+                    //   var langSuffix = GetSuffixForLanguageFromSomewhere(this.StartInfo.Language); // eg, "_en", "_de" etc
+                    //   var columns = "ID,Name" + langSuffix;
+                    //   dynamic results = await XivApi.Search(arguments, "Item", columns, 1);
+                    //   var itemId = (short)results.Results[0].ID;
+                    //   var itemName = (string)results.Results[0]["Name" + langSuffix];
+
+                    dynamic results = await XivApi.Search(arguments, "Item", "ID,Name", 1);
                     var itemId = (short) results.Results[0].ID;
                     var itemName = (string)results.Results[0].Name;
 

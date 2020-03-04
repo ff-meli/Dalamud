@@ -13,6 +13,8 @@ namespace Dalamud.Game.Internal.DXGI
         public IntPtr Present { get; set; }
         public IntPtr ResizeBuffers { get; set; }
 
+        public IntPtr ResizeBuffersAltTest { get; set; }
+
         protected override void Setup64Bit(SigScanner sig)
         {
             var module = Process.GetCurrentProcess().Modules.Cast<ProcessModule>().First(m => m.ModuleName == "dxgi.dll");
@@ -24,6 +26,7 @@ namespace Dalamud.Game.Internal.DXGI
             // This(code after the function head - offset of it) was picked to avoid running into issues with other hooks being installed into this function.
             Present = scanner.ScanModule("41 8B F0 8B FA 89 54 24 ?? 48 8B D9 48 89 4D ?? C6 44 24 ?? 00") - 0x37;
 
+            ResizeBuffersAltTest = scanner.ScanModule("48 F7 D8 48 1B DB 48 23 D9 48 ?? ?? ?? 48 ?? ?? 48 ?? ?? ?? FF 15") - 0x65;
             ResizeBuffers = scanner.ScanModule("48 8B C4 55 41 54 41 55 41 56 41 57 48 8D 68 ?? 48 81 EC C0 00 00 00");
         }
     }

@@ -94,6 +94,7 @@ namespace Dalamud.Interface
 
         public void Enable()
         {
+            Log.Debug("Enabling interface hooks");
             this.setCursorHook.Enable();
             this.presentHook.Enable();
             this.resizeBuffersHook.Enable();
@@ -148,10 +149,21 @@ namespace Dalamud.Interface
             return null;
         }
 
+        int presentCallIdx = 0;
+        int resizeCallIdx = 0;
+
         private IntPtr PresentDetour(IntPtr swapChain, uint syncInterval, uint presentFlags)
         {
+            bool shouldLog = (presentCallIdx < 2);
+            if (shouldLog)
+            {
+                Log.Debug("PresentDetour call " + presentCallIdx);
+                presentCallIdx++;
+            }
+
             if (this.scene == null)
             {
+                Log.Debug("Creating scene");
                 this.scene = new RawDX11Scene(swapChain);
                 this.scene.ImGuiIniPath = Path.Combine(Path.GetDirectoryName(this.dalamud.StartInfo.ConfigurationPath), "dalamudUI.ini");
                 this.scene.OnBuildUI += Display;
@@ -188,11 +200,25 @@ namespace Dalamud.Interface
                 ImGui.GetStyle().Colors[(int) ImGuiCol.Tab] = new Vector4(0.23f, 0.23f, 0.23f, 0.86f);
                 ImGui.GetStyle().Colors[(int) ImGuiCol.TabHovered] = new Vector4(0.71f, 0.71f, 0.71f, 0.80f);
                 ImGui.GetStyle().Colors[(int) ImGuiCol.TabActive] = new Vector4(0.36f, 0.36f, 0.36f, 1.00f);
+
+                Log.Debug("scene created");
             }
 
             this.scene.Render();
 
-            return this.presentHook.Original(swapChain, syncInterval, presentFlags);
+            if (shouldLog)
+            {
+                Log.Debug("calling original present");
+            }
+
+            var ret = this.presentHook.Original(swapChain, syncInterval, presentFlags);
+
+            if (shouldLog)
+            {
+                Log.Debug("original present returned");
+            }
+
+            return ret;
         }
 
         private IntPtr ResizeBuffersDetour(IntPtr swapChain, uint bufferCount, uint width, uint height, uint newFormat, uint swapChainFlags)

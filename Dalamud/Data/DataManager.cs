@@ -82,6 +82,8 @@ namespace Dalamud.Data
                                                                "Unknown Language: " + this.language)
                 };
 
+                Log.Debug("Creating Lumina");
+
                 gameData = new Lumina.Lumina(Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), "sqpack"), luminaOptions);
 
                 Log.Information("Lumina is ready: {0}", gameData.DataPath);

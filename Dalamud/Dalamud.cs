@@ -109,14 +109,14 @@ namespace Dalamud {
 
             this.BotManager.Start();
 
-            try {
-                this.PluginManager = new PluginManager(this, this.StartInfo.PluginDirectory, this.StartInfo.DefaultPluginDirectory);
-                this.PluginManager.LoadPlugins();
-            } catch (Exception ex) {
-                this.Framework.Gui.Chat.PrintError(
-                    "[XIVLAUNCHER] There was an error loading additional plugins. Please check the log for more details.");
-                Log.Error(ex, "Plugin load failed.");
-            }
+            //try {
+            //    this.PluginManager = new PluginManager(this, this.StartInfo.PluginDirectory, this.StartInfo.DefaultPluginDirectory);
+            //    this.PluginManager.LoadPlugins();
+            //} catch (Exception ex) {
+            //    this.Framework.Gui.Chat.PrintError(
+            //        "[XIVLAUNCHER] There was an error loading additional plugins. Please check the log for more details.");
+            //    Log.Error(ex, "Plugin load failed.");
+            //}
         }
 
         public void Unload() {

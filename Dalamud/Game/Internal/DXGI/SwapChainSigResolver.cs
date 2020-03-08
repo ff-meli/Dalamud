@@ -13,8 +13,6 @@ namespace Dalamud.Game.Internal.DXGI
         public IntPtr Present { get; set; }
         public IntPtr ResizeBuffers { get; set; }
 
-        public IntPtr ResizeBuffersAltTest { get; set; }
-
         protected override void Setup64Bit(SigScanner sig)
         {
             var module = Process.GetCurrentProcess().Modules.Cast<ProcessModule>().First(m => m.ModuleName == "dxgi.dll");

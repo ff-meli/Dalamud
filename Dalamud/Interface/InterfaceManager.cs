@@ -53,15 +53,6 @@ namespace Dalamud.Interface
         {
             this.dalamud = dalamud;
 
-            Log.Verbose("\n");
-            Log.Verbose("===== P R O C E S S E S =====");
-            var proc = System.Diagnostics.Process.GetCurrentProcess();
-            for (var i = 0; i < proc.Modules.Count; i++)
-            {
-                Log.Verbose(proc.Modules[i].FileName);
-            }
-            Log.Verbose("\n\n");
-
             try {
                 var sigResolver = new SwapChainSigResolver();
                 sigResolver.Setup(scanner);
@@ -87,7 +78,6 @@ namespace Dalamud.Interface
             Log.Verbose("SetCursor address {SetCursor}", setCursorAddr);
             Log.Verbose("Present address {Present}", Address.Present);
             Log.Verbose("ResizeBuffers address {ResizeBuffers}", Address.ResizeBuffers);
-            Log.Verbose("ResizeBuffersAltTest address {ResizeBuffersAltTest}", Address.ResizeBuffersAltTest);
 
             this.setCursorHook = new Hook<SetCursorDelegate>(setCursorAddr, new SetCursorDelegate(SetCursorDetour), this);
 

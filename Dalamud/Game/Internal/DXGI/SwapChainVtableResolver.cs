@@ -61,8 +61,6 @@ namespace Dalamud.Game.Internal.DXGI
         public IntPtr Present { get; set; }
         public IntPtr ResizeBuffers { get; set; }
 
-        public IntPtr ResizeBuffersAltTest { get; set; } = IntPtr.Zero;
-
         #endregion
 
         protected override void Setup64Bit(SigScanner sig) {

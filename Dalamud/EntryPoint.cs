@@ -52,7 +52,7 @@ namespace Dalamud {
 #if DEBUG
                    .MinimumLevel.Verbose()
 #else
-                .MinimumLevel.Information()
+                .MinimumLevel.Verbose()
 #endif
                    .CreateLogger();
         }

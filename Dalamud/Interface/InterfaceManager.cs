@@ -165,13 +165,17 @@ namespace Dalamud.Interface
             {
                 Log.Debug("Creating scene");
                 this.scene = new RawDX11Scene(swapChain);
+                Log.Debug("Scene created, setting path");
                 this.scene.ImGuiIniPath = Path.Combine(Path.GetDirectoryName(this.dalamud.StartInfo.ConfigurationPath), "dalamudUI.ini");
+                Log.Debug("path set, adding delegate");
                 this.scene.OnBuildUI += Display;
+                Log.Debug("delegate added, setting font");
 
                 var fontPathJp = Path.Combine(Path.GetDirectoryName(typeof(InterfaceManager).Assembly.Location), "UIRes", "NotoSansCJKjp-Medium.otf");
                 ImGui.GetIO().Fonts.AddFontFromFileTTF(fontPathJp, 17.0f, null, ImGui.GetIO().Fonts.GetGlyphRangesJapanese());
 
                 ImGui.GetIO().Fonts.Build();
+                Log.Debug("font built, setting style");
 
                 ImGui.GetStyle().GrabRounding = 3f;
                 ImGui.GetStyle().FrameRounding = 4f;
@@ -201,7 +205,7 @@ namespace Dalamud.Interface
                 ImGui.GetStyle().Colors[(int) ImGuiCol.TabHovered] = new Vector4(0.71f, 0.71f, 0.71f, 0.80f);
                 ImGui.GetStyle().Colors[(int) ImGuiCol.TabActive] = new Vector4(0.36f, 0.36f, 0.36f, 1.00f);
 
-                Log.Debug("scene created");
+                Log.Debug("style set, scene creation completed");
             }
 
             this.scene.Render();
@@ -250,6 +254,7 @@ namespace Dalamud.Interface
 
         private void Display()
         {
+            Log.Debug("display called");
             // this is more or less part of what reshade/etc do to avoid having to manually
             // set the cursor inside the ui
             // This will just tell ImGui to draw its own software cursor instead of using the hardware cursor

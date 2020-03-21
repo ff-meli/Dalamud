@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Dalamud.Configuration;
-using Dalamud.Interface;
-using Dalamud.Plugin.Features;
-using ImGuiNET;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -31,18 +26,6 @@ namespace Dalamud.Plugin
             this.devPluginDirectory = devPluginDirectory;
 
             this.pluginConfigs = new PluginConfigurations(Path.Combine(Path.GetDirectoryName(dalamud.StartInfo.ConfigurationPath), "pluginConfigs"));
-
-            this.dalamud.InterfaceManager.OnDraw += InterfaceManagerOnOnDraw;
-        }
-
-        private void InterfaceManagerOnOnDraw() {
-            foreach (var plugin in this.Plugins) {
-                if (plugin.Plugin is IHasUi uiPlugin) {
-                    ImGui.PushID(plugin.Definition.InternalName);
-                    uiPlugin.Draw(plugin.PluginInterface.UiBuilder);
-                    ImGui.PopID();
-                }
-            }
         }
 
         public void UnloadPlugins() {
@@ -123,6 +106,11 @@ namespace Dalamud.Plugin
                             return false;
                         }
 
+                        if (this.Plugins.Any(x => x.Plugin.GetType().Assembly.GetName().Name == type.Assembly.GetName().Name)) {
+                            Log.Error("Duplicate plugin found: {0}", dllFile.FullName);
+                            return false;
+                        }
+
                         var plugin = (IDalamudPlugin)Activator.CreateInstance(type);
 
                         // this happens for raw plugins that don't specify a PluginDefinition - just generate a dummy one to avoid crashes anywhere
@@ -163,7 +151,11 @@ namespace Dalamud.Plugin
                 var pluginDlls = folder.GetFiles("*.dll", SearchOption.AllDirectories);
 
                 foreach (var dllFile in pluginDlls) {
-                    LoadPluginFromAssembly(dllFile, raw);
+                    try {
+                        LoadPluginFromAssembly(dllFile, raw);
+                    } catch (Exception ex) {
+                        Log.Error(ex, $"Plugin load for {dllFile.FullName} failed.");
+                    }
                 }
             }
         }

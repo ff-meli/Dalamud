@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Target">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFramework>net472</TargetFramework>
@@ -14,24 +14,27 @@
   </PropertyGroup>
   <PropertyGroup Label="Feature">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyVersion>4.7.13.0</AssemblyVersion>
-    <Version>4.7.13.0</Version>
-    <FileVersion>4.7.13.0</FileVersion>
+    <AssemblyVersion>4.7.18.0</AssemblyVersion>
+    <Version>4.7.18.0</Version>
+    <FileVersion>4.7.18.0</FileVersion>
   </PropertyGroup>
   <ItemGroup Label="Resources">
     <None Include="$(SolutionDir)/Resources/**/*" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
+      <DocumentationFile>$(SolutionDir)\bin\Dalamud.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DocumentationFile>E:\Sapphire\recorder\FFXIV.Recorder\/bin\Dalamud.xml</DocumentationFile>
+    <DocumentationFile>$(SolutionDir)\bin\Dalamud.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Sapphire\recorder\FFXIV.Recorder\/bin\Dalamud.xml</DocumentationFile>
+    <DocumentationFile>$(SolutionDir)\bin\Dalamud.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DocumentationFile>E:\Sapphire\recorder\FFXIV.Recorder\/bin\Dalamud.xml</DocumentationFile>
+    <DocumentationFile>$(SolutionDir)bin\Dalamud.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\eye.png" />

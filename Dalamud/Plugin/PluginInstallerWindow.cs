@@ -10,7 +10,6 @@ using System.Net.Http;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using Dalamud.Plugin.Features;
 using ImGuiNET;
 using Newtonsoft.Json;
 using Serilog;
@@ -62,6 +61,8 @@ namespace Dalamud.Plugin
         }
 
         public void UpdatePlugins() {
+            Log.Information("Starting plugin update...");
+
             try {
                 var pluginsDirectory = new DirectoryInfo(this.pluginDirectory);
                 this.installStatus = PluginInstallStatus.Success;
@@ -73,7 +74,7 @@ namespace Dalamud.Plugin
                         continue;
                     }
 
-                    var sortedVersions = versions.OrderBy(x => x.CreationTime);
+                    var sortedVersions = versions.OrderBy(x => int.Parse(x.Name.Replace(".","")));
                     var latest = sortedVersions.Last();
 
                     var localInfoFile = new FileInfo(Path.Combine(latest.FullName, $"{installed.Name}.json"));
@@ -96,8 +97,22 @@ namespace Dalamud.Plugin
 
                     if (remoteInfo.AssemblyVersion != info.AssemblyVersion)
                     {
-                        this.manager.DisablePlugin(info);
+                        Log.Information("Eligible for update: {0}", remoteInfo.InternalName);
+
+                        foreach (var sortedVersion in sortedVersions) {
+                            File.Create(Path.Combine(sortedVersion.FullName, ".disabled"));
+                        }
+
+                        // Try to disable plugin if it is loaded
+                        try {
+                            this.manager.DisablePlugin(info);
+                        } catch {
+                            // ignored
+                        }
+
                         InstallPlugin(remoteInfo);
+                    } else {
+                        Log.Information("Up to date: {0}", remoteInfo.InternalName);
                     }
                 }
             }
@@ -106,6 +121,8 @@ namespace Dalamud.Plugin
                 Log.Error(e, "Plugin update failed hard.");
                 this.installStatus = PluginInstallStatus.Fail;
             }
+
+            Log.Information("Plugin update OK.");
         }
 
         private void InstallPlugin(PluginDefinition definition) {
@@ -173,6 +190,8 @@ namespace Dalamud.Plugin
                     if (pluginDefinition.IsHide)
                         continue;
 
+                    ImGui.PushID(pluginDefinition.InternalName + pluginDefinition.AssemblyVersion);
+
                     if (ImGui.CollapsingHeader(pluginDefinition.Name)) {
                         ImGui.Indent();
 
@@ -214,10 +233,10 @@ namespace Dalamud.Plugin
                                     this.errorModalOnNextFrame = true;
                                 }
 
-                            if (installedPlugin.Plugin is IHasConfigUi v2Plugin && v2Plugin.OpenConfigUi != null) {
+                            if (installedPlugin.PluginInterface.UiBuilder.OnOpenConfigUi != null) {
                                 ImGui.SameLine();
 
-                                if (ImGui.Button("Open Configuration")) v2Plugin.OpenConfigUi?.Invoke(null, null);
+                                if (ImGui.Button("Open Configuration")) installedPlugin.PluginInterface.UiBuilder.OnOpenConfigUi?.Invoke(null, null);
                             }
 
                             ImGui.SameLine();
@@ -226,6 +245,8 @@ namespace Dalamud.Plugin
 
                         ImGui.Unindent();
                     }
+
+                    ImGui.PopID();
                 }
             }
 

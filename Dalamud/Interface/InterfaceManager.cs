@@ -171,7 +171,7 @@ namespace Dalamud.Interface
                 this.scene.OnBuildUI += Display;
                 Log.Debug("delegate added, setting font");
 
-                var fontPathJp = Path.Combine(Path.GetDirectoryName(typeof(InterfaceManager).Assembly.Location), "UIRes", "NotoSansCJKjp-Medium.otf");
+                var fontPathJp = Path.Combine(this.dalamud.StartInfo.WorkingDirectory, "UIRes", "NotoSansCJKjp-Medium.otf");
                 ImGui.GetIO().Fonts.AddFontFromFileTTF(fontPathJp, 17.0f, null, ImGui.GetIO().Fonts.GetGlyphRangesJapanese());
 
                 ImGui.GetIO().Fonts.Build();
